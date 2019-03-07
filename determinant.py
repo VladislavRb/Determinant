@@ -36,6 +36,14 @@ def doElementary(A, n, unchanged, result, alpha):
     for i in range(n):
         A[result][i] += A[unchanged][i] * alpha
 
+def changeLines(A, n, diel):
+    line = 0
+    while A[line][0] == 0:
+        line += 1
+    for i in range(n):
+        A[0][i], A[line][i] = A[line][i], A[0][i]
+    diel.append(-1)
+
 def cutM(A, n):
     for i in range(n):
         del A[i][0]
@@ -53,19 +61,25 @@ toDivide = []
 A = []
 A.append(input().split())
 n = len(A[0])
-for i in range(n - 1):
+counter = 1
+while counter < n:
     line = input().split()
     if len(line) != n:
         print("Incorrect input")
-        i -= 1
     else:
         A.append(line)
+        counter += 1
         
 for i in range(n):
     for j in range(n):
         A[i][j] = int(A[i][j])
         
 for i in range(n, 1, -1):
+    if columnLCD(A, i) == 0:
+        diel.append(0)
+        break
+    if A[0][0] == 0:
+        changeLines(A, i, diel)
     simplifyM(A, i, diel, toDivide)
     cutM(A, i)
 det = A[0][0]
@@ -74,4 +88,4 @@ for i in diel:
 for i in toDivide:
     det /= i
 print("")
-print(det)
+print("det =", det)
